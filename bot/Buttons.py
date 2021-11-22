@@ -26,7 +26,7 @@ def cancel_button():
     button = [
         [cancel]
     ]
-    return ReplyKeyboardMarkup(button)
+    return ReplyKeyboardMarkup(button, resize_keyboard=True)
 
 def region_buttons():
     button = []

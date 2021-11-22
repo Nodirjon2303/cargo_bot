@@ -83,7 +83,7 @@ def command_zakaz_name(update, context):
 def command_zakaz_image(update, context):
     cargo = Cargo.objects.get(id=context.user_data['cargo'])
     photo_file = update.message.photo[-1].get_file()
-    filename = int(random.random()*100)
+    filename = int(random.random() * 100)
     photo_file.download(f'photo/{filename}.jpg')
     cargo.image = f'photo/{filename}.jpg'
     cargo.save()
@@ -112,6 +112,7 @@ def command_zakaz_weight(update, context):
             update.message.reply_html("Маҳсулот вазнини қайта сонларда китинг")
             return state_zakaz_weight
 
+
 def command_zakaz_soni(update, context):
     soni = update.message.text
     if soni == cancel:
@@ -125,13 +126,14 @@ def command_zakaz_soni(update, context):
             cargo = Cargo.objects.get(id=context.user_data['cargo'])
             cargo.soni = soni
             cargo.save()
-            update.message.reply_html("Махсулот ўлчўвни киритинг!\n(Упаковка ўлчўви)\n"
+            update.message.reply_html("Махсулот ўлчўвни киритинг!\n(Упаковка ўлчўви)Ўлчамларни см ларда киритинг\t"
                                       "Масалан: 80х90х110")
             return state_zakaz_height
         else:
             update.message.reply_html("Маҳсулот сонини хато киритдингиз\n"
                                       "Илтимос қайта рақамлар билан киритинг")
             return state_zakaz_soni
+
 
 def command_zakaz_height(update, context):
     ulchami = update.message.text
@@ -153,9 +155,10 @@ def command_zakaz_height(update, context):
             return state_zakaz_phone
         else:
             update.message.reply_html("Маҳсулот ўлчамини хато киритдингиз\n"
-                                      "Илтимос қайта киритинг"
+                                      "Илтимос қайта киритинг.Ўлчамларни см ларда киритинг"
                                       "\nМасалан: 80х90х110")
             return state_zakaz_height
+
 
 def command_zakaz_phone(update, context):
     phone = update.message.text
@@ -177,6 +180,7 @@ def command_zakaz_phone(update, context):
                                       "Илтимос қайта рақамлар билан киритинг")
             return state_zakaz_phone
 
+
 def command_zakaz_adress(update, context):
     query = update.callback_query
     A = query.data
@@ -188,28 +192,30 @@ def command_zakaz_adress(update, context):
     admins = Profile.objects.filter(status='admin')
     for i in admins:
         caption = f"""
-        Номи:           {cargo.name}
-        оғирлиги:       {cargo.weight}
-        Сони:           {cargo.soni}
-        ўлчами:         {cargo.length}x{cargo.width}x{cargo.height}
-        Телефон рақами: {cargo.phone_number}
-        Манзили:        {cargo.region.name}
-        Заказ берувчи:  {cargo.user.full_name}
-                        {cargo.user.first_name}
-                        @{cargo.user.username}
+Номи:           {cargo.name}
+оғирлиги:       {cargo.weight}
+Сони:           {cargo.soni}
+ўлчами:         {cargo.length}x{cargo.width}x{cargo.height} = {cargo.length * cargo.height
+                                                               * cargo.width} cm^3
+Телефон рақами: {cargo.phone_number}
+Манзили:        {cargo.region.name}
+Заказ берувчи:  {cargo.user.full_name}
+                {cargo.user.first_name}
+                @{cargo.user.username}
         """
 
         context.bot.send_photo(chat_id=i.user_id, photo=open(f'{cargo.image}', 'rb'), caption=caption)
-    query.message.reply_html('маин мену', reply_markup=user_main_button())
+    query.message.reply_html('Сизнинг заказ муаффақоятли қабул қилинди. Сиз билан 24 соат давомида бўғланамиз ва нархларни келтириб утамиз', reply_markup=user_main_button())
     return state_user_main
 
 
 def command_user_cancel(update, context):
-    update.message.reply_html('main manu', reply_markup=user_main_button())
-    cargo = Cargo.objects.get(id = context.user_data['cargo'])
+    update.message.reply_html('маин мену', reply_markup=user_main_button())
+    cargo = Cargo.objects.get(id=context.user_data['cargo'])
     cargo.delete()
     cargo.save()
     return state_user_main
+
 
 def command_user_contact(update, context):
     update.message.reply_html(

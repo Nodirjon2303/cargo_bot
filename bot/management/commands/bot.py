@@ -39,7 +39,7 @@ class Command(BaseCommand):
                     MessageHandler(Filters.regex('^(' + boglanish + ')$'), command_user_contact),
 
                 ],
-                state_admin_main:[
+                state_admin_main: [
                     MessageHandler(Filters.regex('^(' + status + ')$'), command_admin_main)
                 ],
                 state_zakaz_name: [
