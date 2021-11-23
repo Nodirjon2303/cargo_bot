@@ -30,7 +30,7 @@ class Cargo(models.Model):
     length = models.PositiveIntegerField(null=True, blank=True)
     phone_number = models.CharField(max_length=25, null=True, blank=True)
     status = models.CharField(max_length=125,null=True, blank=True, default="ko'rib chiqilmoqda")
-
+    cargo_id = models.CharField(max_length=25, null=True, blank=True)
     def __str__(self):
         return f"{self.user.first_name}     {self.name}     {self.status}"
 

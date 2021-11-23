@@ -188,24 +188,28 @@ def command_zakaz_adress(update, context):
     region = Region.objects.get(name=A)
     cargo = Cargo.objects.get(id=context.user_data['cargo'])
     cargo.region = region
+    cargo.cargo_id = f"PB{999999-cargo.id}"
     cargo.save()
     admins = Profile.objects.filter(status='admin')
     for i in admins:
         caption = f"""
-Номи:           {cargo.name}
-оғирлиги:       {cargo.weight}
-Сони:           {cargo.soni}
-ўлчами:         {cargo.length}x{cargo.width}x{cargo.height} = {cargo.length * cargo.height
+<b>Заказ_ид</b>        {cargo.cargo_id}
+<b>Номи:</b>           {cargo.name}
+<b>оғирлиги:</b>       {cargo.weight}
+<b>Сони:</b>           {cargo.soni}
+<b>ўлчами:</b>         {cargo.length}x{cargo.width}x{cargo.height} = {cargo.length * cargo.height
                                                                * cargo.width} cm^3
-Телефон рақами: {cargo.phone_number}
-Манзили:        {cargo.region.name}
-Заказ берувчи:  {cargo.user.full_name}
-                {cargo.user.first_name}
-                @{cargo.user.username}
+<b>Телефон рақами:</b> {cargo.phone_number}
+<b>Манзили:</b>        {cargo.region.name}
+<b>Заказ берувчи:</b>  {cargo.user.full_name}
+                       {cargo.user.first_name}
+                       @{cargo.user.username}
         """
 
-        context.bot.send_photo(chat_id=i.user_id, photo=open(f'{cargo.image}', 'rb'), caption=caption)
-    query.message.reply_html('Сизнинг заказ муаффақоятли қабул қилинди. Сиз билан 24 соат давомида бўғланамиз ва нархларни келтириб утамиз', reply_markup=user_main_button())
+        context.bot.send_photo(chat_id=i.user_id, photo=open(f'{cargo.image}', 'rb'), caption=caption, parse_mode='HTML')
+    query.message.reply_html('Сизнинг заказ муаффақоятли қабул қилинди.'
+                             f'Сизнинг Заказ_ид: {cargo.cargo_id}'
+                             f'\nСиз билан 24 соат давомида бўғланамиз ва нархларни келтириб утамиз', reply_markup=user_main_button())
     return state_user_main
 
 
