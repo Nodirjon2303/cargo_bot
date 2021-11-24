@@ -212,7 +212,7 @@ def command_zakaz_adress(update, context):
         if cargo.image:
             context.bot.send_photo(chat_id=i.user_id, photo=open(f'{cargo.image}', 'rb'), caption=caption, parse_mode='HTML')
         else:
-            context.bot.send_message(chat_id=i.user_id, text=caption)
+            context.bot.send_message(chat_id=i.user_id, text=caption, parse_mode='HTML')
     query.message.reply_html('Сизнинг заказ муаффақоятли қабул қилинди.'
                              f'Сизнинг Заказ_ид: {cargo.cargo_id}'
                              f'\nСиз билан 24 соат давомида бўғланамиз ва нархларни келтириб утамиз', reply_markup=user_main_button())
