@@ -22,7 +22,7 @@ state_zakaz_phone = 10
 
 def start(update, context):
     update.message.reply_html(
-        f"Aссалому алайкум {update.effective_user.first_name} Ботимизга хуш келибсиз Ушбу бот орқали сиз Хитойдан Ўзбекистондга юкларингизни юборишингиз мумкин\n")
+        f"Aссалому алайкум {update.effective_user.first_name}\nХитойдан Ўзбекистонга юкларин хисоблашингиз ва бот орқали жўнатишингиз  мумкин.")
     user_id = update.effective_user.id
 
     profile, bol = Profile.objects.get_or_create(user_id=user_id)
@@ -55,9 +55,7 @@ def command_register_full_name(update, context):
     profile = Profile.objects.get(user_id=update.effective_user.id)
     profile.full_name = full_name
     profile.save()
-    update.message.reply_html('Сиз муаффақиятли рўйхатдан ўтдингиз\n'
-                              'Хитойдан Ўзбекистонга бемалол юк юборишингиз мумкин',
-                              reply_markup=user_main_button())
+    update.message.reply_html("Рўйхатдан муваффақиятли ўтдингиз, Хитойдан Ўзбекистонга юкларингизни шу бот орқали хисоблашингиз мумкин.",reply_markup=user_main_button())
 
     return state_user_main
 
@@ -76,7 +74,7 @@ def command_zakaz_name(update, context):
         user = Profile.objects.get(user_id=update.effective_user.id)
         cargo = Cargo.objects.create(user=user, name=name)
         context.user_data['cargo'] = cargo.id
-        update.message.reply_html("Яхши енди маҳсулотнинг расмини юборинг")
+        update.message.reply_html("Маҳсулот расмини юборинг, агар махсулот расми бўлмаса X сўзини қолдиринг.")
         return state_zakaz_image
 
 
@@ -87,6 +85,12 @@ def command_zakaz_image(update, context):
     photo_file.download(f'photo/{filename}.jpg')
     cargo.image = f'photo/{filename}.jpg'
     cargo.save()
+    update.message.reply_html(" Махсулот вазнини киритинг.\n"
+                              "(Упаковкадан кейинги вазни/GROSS)"
+                              "\nМасалан: 24кг")
+    return state_zakaz_weight
+
+def command_user_skipimage(update,context):
     update.message.reply_html(" Махсулот вазнини киритинг.\n"
                               "(Упаковкадан кейинги вазни/GROSS)"
                               "\nМасалан: 24кг")
@@ -205,8 +209,10 @@ def command_zakaz_adress(update, context):
                        {cargo.user.first_name}
                        @{cargo.user.username}
         """
-
-        context.bot.send_photo(chat_id=i.user_id, photo=open(f'{cargo.image}', 'rb'), caption=caption, parse_mode='HTML')
+        if cargo.image:
+            context.bot.send_photo(chat_id=i.user_id, photo=open(f'{cargo.image}', 'rb'), caption=caption, parse_mode='HTML')
+        else:
+            context.bot.send_message(chat_id=i.user_id, text=caption)
     query.message.reply_html('Сизнинг заказ муаффақоятли қабул қилинди.'
                              f'Сизнинг Заказ_ид: {cargo.cargo_id}'
                              f'\nСиз билан 24 соат давомида бўғланамиз ва нархларни келтириб утамиз', reply_markup=user_main_button())
@@ -223,7 +229,7 @@ def command_user_cancel(update, context):
 
 def command_user_contact(update, context):
     update.message.reply_html(
-        "Савол ва таклифлар юзасидан +998 99 791 07 91 рақамига ёки @labbay_admin га мурожаат қилишингиз мумкин")
+        "Савол ва таклифлар юзасидан 998503567 рақамига ёки @labbay_admin га мурожаат қилинг!")
     return state_user_main
 
 

@@ -46,6 +46,7 @@ class Command(BaseCommand):
                     MessageHandler(Filters.text, command_zakaz_name)
                 ],
                 state_zakaz_image: [
+                    MessageHandler(Filters.regex('^(' + 'X' + ')$'), command_user_skipimage),
                     MessageHandler(Filters.regex('^(' + cancel + ')$'), command_user_cancel),
                     MessageHandler(Filters.photo, command_zakaz_image)
                 ],

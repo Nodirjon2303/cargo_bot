@@ -2,7 +2,7 @@ from .models import *
 from telegram import ReplyKeyboardMarkup, \
     InlineKeyboardButton, KeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
 
-zakaz_qoldirish = '➕Заказ қолдириш'
+zakaz_qoldirish = '➕Юк хисоблаш'
 boglanish = 'Боғланиш'
 status = '📝Статистика'
 cancel = 'Бекор қилиш'
